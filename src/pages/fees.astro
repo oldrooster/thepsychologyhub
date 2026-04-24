@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const pages = await getCollection('pages');
+const page = pages.find(p => p.slug === 'fees')!;
+const { Content } = await page.render();
+---
+
+<PageLayout title={page.data.title} description="Information about fees, ACC funding, and insurance at The Psychology Hub, Christchurch.">
+  <Content />
+</PageLayout>

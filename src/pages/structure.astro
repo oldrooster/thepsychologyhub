@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const pages = await getCollection('pages');
+const page = pages.find(p => p.slug === 'structure')!;
+const { Content } = await page.render();
+---
+
+<PageLayout title={page.data.title} description="Learn about the structure of The Psychology Hub group practice in Riccarton, Christchurch.">
+  <Content />
+</PageLayout>

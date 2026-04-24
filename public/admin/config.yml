@@ -1,0 +1,61 @@
+backend:
+  name: github
+  repo: TO_BE_CONFIGURED/thepsychologyhub   # Replace with your GitHub username/repo
+  branch: main
+  base_url: https://sveltia-cms-auth.TO_BE_CONFIGURED.workers.dev  # OR use Netlify OAuth
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "clinicians"
+    label: "Clinicians"
+    label_singular: "Clinician"
+    folder: "src/content/clinicians"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Role / Title", name: "role", widget: "string", hint: "e.g. Clinical Psychologist, Nurse Therapist" }
+      - { label: "Qualifications", name: "qualifications", widget: "string", required: false }
+      - { label: "Photo", name: "photo", widget: "image", required: false, allow_multiple: false, media_folder: "/public/images/clinicians", public_folder: "/images/clinicians" }
+      - { label: "Accepting Referrals (Available)", name: "availability", widget: "boolean", default: false }
+      - label: "Specialties"
+        name: "specialties"
+        widget: "select"
+        multiple: true
+        options:
+          - "ACC therapy"
+          - "ACT"
+          - "Adolescents"
+          - "Adult ADHD"
+          - "Adult ASD"
+          - "Adults"
+          - "Anxiety"
+          - "Available"
+          - "CBT"
+          - "Children"
+          - "Couples"
+          - "Dietitian"
+          - "Eating"
+          - "EMDR"
+          - "Grief"
+          - "Health/Adjustment"
+          - "Mental Injury Assessor"
+          - "Rainbow"
+          - "Therapist"
+      - { label: "Contact Email", name: "contact_email", widget: "string", required: false }
+      - { label: "Contact Notes", name: "contact_notes", widget: "text", required: false, hint: "e.g. referral instructions or notes about how to contact" }
+      - { label: "Display Order", name: "display_order", widget: "number", default: 99, hint: "Lower number = displayed first" }
+      - { label: "Bio", name: "body", widget: "markdown" }
+
+  - name: "pages"
+    label: "Pages"
+    label_singular: "Page"
+    folder: "src/content/pages"
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string", hint: "URL path (e.g. fees, booking)" }
+      - { label: "Content", name: "body", widget: "markdown" }
