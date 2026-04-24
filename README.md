@@ -1,82 +1,65 @@
-# The Psychology Hub — Website Migration
+# The Psychology Hub — Website
 
-Migration from WordPress to a static Astro site with Decap CMS, hosted on Cloudflare Pages.
+Static site for [The Psychology Hub](https://www.thepsychologyhub.co.nz/), migrated from WordPress.
 
-**Live site:** https://www.thepsychologyhub.co.nz  
 **Stack:** Astro · Decap CMS · Cloudflare Pages · GitHub
 
 ---
 
-## What This Repo Contains
+## Project Structure
 
 ```
 /
-├── claude_prompt.md        # The Claude Code prompt used to build the site
-├── README.md               # This file
 ├── src/
 │   ├── content/
 │   │   ├── clinicians/     # One .md file per clinician (managed via CMS)
 │   │   └── pages/          # Static page content (managed via CMS)
-│   ├── layouts/            # Astro layout components
-│   └── pages/              # Astro page routes
+│   ├── layouts/
+│   │   ├── BaseLayout.astro   # Site shell (nav, footer)
+│   │   └── PageLayout.astro   # Layout for static pages
+│   ├── pages/
+│   │   ├── index.astro        # Home page (clinician grid + filter)
+│   │   ├── structure.astro
+│   │   ├── assessment.astro
+│   │   ├── therapy.astro
+│   │   ├── dietitians.astro
+│   │   ├── fees.astro
+│   │   ├── booking.astro
+│   │   └── room-rental.astro
+│   └── styles/
+│       └── global.css
 ├── public/
 │   ├── admin/
 │   │   ├── index.html      # Decap CMS entry point
 │   │   └── config.yml      # Decap CMS configuration
 │   └── images/
 │       ├── clinicians/     # Clinician profile photos
-│       └── pages/          # Images used on static pages
+│       ├── pages/          # Images used on static pages
+│       └── logo.svg        # Site logo (replace with real logo)
 ├── astro.config.mjs
-├── _redirects              # Cloudflare Pages routing rules
+├── scrape.mjs              # Content scraper (for re-importing from WordPress)
 └── package.json
 ```
+
+---
+
+## Things Still To Do
+
+- [ ] **Replace the logo** — `public/images/logo.svg` is a placeholder. Upload the real logo file (PNG or SVG) and update the path in `src/layouts/BaseLayout.astro`
+- [ ] **Fill in clinician details** — 20 of the 22 clinicians have placeholder bios and no photos/emails. Edit via the CMS at `/admin/` once deployed, or edit the `.md` files directly in `src/content/clinicians/`
+- [ ] **Update `public/admin/config.yml`** — replace `TO_BE_CONFIGURED` with `oldrooster` (see Step 4)
 
 ---
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or higher
-- A [GitHub](https://github.com) account
 - A [Cloudflare](https://cloudflare.com) account (free)
-- Your domain registrar login (to update DNS at the end)
+- Your domain registrar login (to update DNS)
 
 ---
 
-## Step 1 — Run Claude Code
-
-Claude Code builds the entire site and scrapes the existing WordPress content in one session.
-
-### Install Claude Code
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-### Run it
-
-```bash
-# Navigate to this repo folder
-cd psychology-hub
-
-# Start Claude Code
-claude
-
-# Then paste the contents of claude_prompt.md when prompted
-```
-
-Claude Code will:
-1. Scrape all 22 clinician profiles (bio, photo, email, tags) from the live site
-2. Scrape all static pages (Structure, Fees, Assessments, etc.)
-3. Download all images
-4. Build the complete Astro site
-5. Configure Decap CMS
-6. Set up Cloudflare Pages deployment config
-
-> **Estimated time:** 15–30 minutes for the full build and scrape.
-
----
-
-## Step 2 — Test Locally
+## Step 1 — Test Locally
 
 ```bash
 npm install
@@ -96,21 +79,7 @@ Open http://localhost:4321 and verify:
 
 ---
 
-## Step 3 — Push to GitHub
-
-If you haven't already initialised git:
-
-```bash
-git init
-git add .
-git commit -m "Initial build — migrated from WordPress"
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-git push -u origin main
-```
-
----
-
-## Step 4 — Deploy to Cloudflare Pages
+## Step 2 — Deploy to Cloudflare Pages
 
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com)
 2. Go to **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
@@ -125,11 +94,11 @@ Cloudflare will build and deploy the site. You'll get a URL like `your-repo.page
 
 ---
 
-## Step 5 — Set Up Decap CMS (so your wife can edit content)
+## Step 3 — Set Up Decap CMS (so your wife can edit content)
 
 Decap CMS uses GitHub as its backend. You need to create a GitHub OAuth app so she can log in at `/admin`.
 
-### 5a — Create a GitHub OAuth App
+### 3a — Create a GitHub OAuth App
 
 1. Go to GitHub → **Settings** → **Developer settings** → **OAuth Apps** → **New OAuth App**
 2. Fill in:
@@ -141,14 +110,14 @@ Decap CMS uses GitHub as its backend. You need to create a GitHub OAuth app so s
 
 > **Why Netlify's callback URL?** Decap CMS uses Netlify's OAuth gateway even when hosted on Cloudflare Pages. It's free and requires no Netlify account.
 
-### 5b — Update config.yml
+### 3b — Update config.yml
 
 Open `public/admin/config.yml` and fill in the placeholders:
 
 ```yaml
 backend:
   name: github
-  repo: YOUR_USERNAME/YOUR_REPO_NAME   # e.g. jsmith/psychology-hub
+  repo: oldrooster/thepsychologyhub
   branch: main
 ```
 
@@ -160,7 +129,7 @@ git commit -m "Configure CMS backend"
 git push
 ```
 
-### 5c — Test CMS Login
+### 3c — Test CMS Login
 
 Visit `https://your-repo.pages.dev/admin` and log in with GitHub.
 
@@ -170,7 +139,7 @@ You should see the Decap CMS editor with two collections:
 
 ---
 
-## Step 6 — Point the Domain to Cloudflare Pages
+## Step 4 — Point the Domain to Cloudflare Pages
 
 ### At Cloudflare Pages
 
@@ -193,7 +162,7 @@ Once propagated, visit https://www.thepsychologyhub.co.nz and confirm the new si
 
 ---
 
-## Step 7 — Decommission WordPress
+## Step 5 — Decommission WordPress
 
 Once you've confirmed the new site is live and stable for a few days:
 
@@ -267,8 +236,8 @@ Check that image paths in clinician markdown files use `/images/clinicians/filen
 **Build failing on Cloudflare**  
 Check the build log in the Cloudflare Pages dashboard. The most common cause is a Node.js version mismatch — add an environment variable `NODE_VERSION = 18` in the Pages settings.
 
-**A clinician's photo didn't scrape correctly**  
-Upload manually via the CMS — go to the clinician's profile and use the photo upload field.
+**Clinician photos are missing**  
+The WordPress site blocked scraping, so no photos were imported. Upload them manually via the CMS — go to the clinician's profile and use the photo upload field.
 
 **DNS not propagating**  
 Use https://dnschecker.org to check propagation status across global DNS servers.
