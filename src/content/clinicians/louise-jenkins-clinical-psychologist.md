@@ -1,13 +1,17 @@
 ---
 name: "Louise Jenkins"
 role: "Clinical Psychologist"
-qualifications: "PGDipClinPsych, MA, MNZCCP"
-photo: ""
+qualifications: "PGDipClinPsych, MA, BSc (First Class Hons)"
+photo: "/images/clinicians/Louise-J.jpg"
 availability: false
-specialties: ["Adults", "Anxiety", "Mental Injury Assessor", "CBT", "Therapist"]
-contact_email: ""
+specialties: ["Eating", "EMDR", "Health/Adjustment", "Therapist"]
+contact_email: "louisejpsychology@gmail.com"
 contact_notes: ""
 display_order: 14
 ---
 
-Louise is a Clinical Psychologist and ACC Mental Injury Assessor. She works with adults experiencing anxiety, trauma, and work-related stress, providing both assessment and therapeutic services.
+Louise is a registered Clinical Psychologist with eight years of experience at the Eating Disorders Service. She works with adults (18+) experiencing depression, anxiety, eating difficulties, body image concerns, binge eating, adjustment issues, infertility, and trauma.
+
+Her therapeutic approaches include Cognitive Behavioural Therapy, Metacognitive Therapy, EMDR, and emotion regulation skills. She holds ACC approval for sensitive claims and birth trauma cases.
+
+Personally, she is a mother of three who enjoys family time, outdoor activities, and maintaining an active lifestyle.

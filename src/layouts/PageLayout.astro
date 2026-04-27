@@ -12,7 +12,17 @@ const { title, description, heroImage } = Astro.props;
 
 <BaseLayout title={title} description={description}>
   <article class="static-page">
-    <div class="page-hero" style={heroImage ? `--hero-image: url('${heroImage}')` : ''}>
+    <div class={`page-hero${heroImage ? ' has-image' : ''}`}>
+      {heroImage && (
+        <img
+          src={heroImage}
+          alt=""
+          class="page-hero-image"
+          loading="eager"
+          decoding="async"
+          aria-hidden="true"
+        />
+      )}
       <div class="container">
         <h1 class="page-title">{title}</h1>
       </div>
@@ -29,32 +39,55 @@ const { title, description, heroImage } = Astro.props;
 
 <style>
   .page-hero {
-    background: var(--color-warm-white);
-    background-image: var(--hero-image, none);
-    background-size: cover;
-    background-position: center;
-    padding: 4rem 0;
     position: relative;
+    background: var(--color-warm-white);
+    min-height: 190px;
     border-bottom: 1px solid var(--color-border-light);
+    display: flex;
+    align-items: center;
   }
 
-  .page-hero::after {
+  .page-hero.has-image::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, rgba(245,241,235,0.85), rgba(245,241,235,0.95));
+    background: linear-gradient(to bottom, rgba(16, 24, 32, 0.08), rgba(16, 24, 32, 0.2));
     pointer-events: none;
+  }
+
+  .page-hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   .page-hero .container {
     position: relative;
     z-index: 1;
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .page-hero.has-image .container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: clamp(0.75rem, 2.6vw, 1.6rem);
+    padding-top: 0;
   }
 
   .page-title {
-    font-size: 2.25rem;
+    font-size: clamp(1.1rem, 2.1vw, 1.3rem);
     font-weight: 700;
-    color: var(--color-sage-dark);
+    color: #ffffff;
+    background: rgba(129, 162, 63, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    padding: 0.5rem 1.4rem;
   }
 
   .page-body {
@@ -118,11 +151,16 @@ const { title, description, heroImage } = Astro.props;
 
   @media (max-width: 640px) {
     .page-title {
-      font-size: 1.75rem;
+      font-size: 1rem;
+      padding: 0.45rem 1rem;
     }
 
     .page-hero {
-      padding: 2.5rem 0;
+      min-height: 150px;
+    }
+
+    .page-hero .container {
+      padding: 0.85rem 1rem;
     }
 
     .page-body {

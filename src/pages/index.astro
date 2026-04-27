@@ -120,7 +120,6 @@ const clinicianData = await Promise.all(
               <path d="M8 72c0-17.67 14.33-32 32-32s32 14.33 32 32" fill="currentColor" opacity="0.15"/>
             </svg>
           </div>
-          <span id="modal-available-badge" class="available-badge available-badge--large" hidden>Available</span>
         </div>
         <div class="modal-content">
           <h2 id="modal-name" class="modal-name"></h2>
@@ -205,7 +204,6 @@ const clinicianData = await Promise.all(
 
   const modalPhoto = document.getElementById('modal-photo') as HTMLImageElement;
   const modalPhotoPlaceholder = document.getElementById('modal-photo-placeholder') as HTMLElement;
-  const modalAvailBadge = document.getElementById('modal-available-badge') as HTMLElement;
   const modalName = document.getElementById('modal-name') as HTMLElement;
   const modalRole = document.getElementById('modal-role') as HTMLElement;
   const modalQuals = document.getElementById('modal-quals') as HTMLElement;
@@ -243,13 +241,13 @@ const clinicianData = await Promise.all(
       modalPhotoPlaceholder.hidden = false;
     }
 
-    modalAvailBadge.hidden = !c.availability;
     modalName.textContent = c.name;
     modalRole.textContent = c.role;
     modalQuals.textContent = c.qualifications;
 
     // Tags
     modalTags.innerHTML = c.specialties
+      .filter((t: string) => t !== 'Available')
       .map((t: string) => `<span class="tag${t === 'Available' ? ' tag--available' : ''}">${t}</span>`)
       .join('');
 
@@ -583,6 +581,10 @@ const clinicianData = await Promise.all(
     align-items: flex-end;
   }
 
+  .modal[hidden] {
+    display: none;
+  }
+
   @media (min-width: 640px) {
     .modal {
       align-items: center;
@@ -670,21 +672,23 @@ const clinicianData = await Promise.all(
   .modal-photo-wrap {
     position: relative;
     background: var(--color-warm-white);
-    aspect-ratio: 16/9;
+    aspect-ratio: 4/5;
+    max-height: 62dvh;
     overflow: hidden;
   }
 
   @media (min-width: 640px) {
     .modal-photo-wrap {
-      aspect-ratio: 2/1;
+      aspect-ratio: 3/4;
+      max-height: 56dvh;
     }
   }
 
   .modal-photo {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    object-fit: contain;
+    object-position: center top;
   }
 
   .modal-photo-placeholder {
@@ -699,14 +703,6 @@ const clinicianData = await Promise.all(
   .modal-photo-placeholder svg {
     width: 120px;
     height: 120px;
-  }
-
-  .available-badge--large {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    font-size: 0.8rem;
-    padding: 0.3rem 0.75rem;
   }
 
   .modal-content {

@@ -1,20 +1,30 @@
 ---
-title: "Book an Appointment"
+title: "Booking"
+heroImage: "/images/pages/024-booking.jpg"
 ---
 
-Booking an appointment at The Psychology Hub is straightforward.
+We do not offer a centralised referral system. Requests for a clinician must be sent directly to the clinician — email addresses are listed under each clinician's profile.
 
-## How to Book
+The clinicians at The Psychology Hub are independent practitioners. They are not employed by The Psychology Hub Ltd, and the organisation does not retain clinical responsibility for clients engaging with individual practitioners.
 
-1. Browse our clinicians and use the filters to find someone accepting new clients
-2. Contact them directly via the email address on their profile
-3. Discuss your needs
-4. Confirm your appointment
+## Self-Referrals
 
-## Location
+You are welcome to contact a clinician directly. When doing so, please include:
 
-All appointments take place at:
+- Your reason for seeking services
+- Your age and gender identity
+- Details about any external funding you may need (e.g. ACC)
 
-**Suite 3, 21 Leslie Hills Drive, Riccarton, Christchurch**
+## GP / Health Professional Referrals
 
-Parking is available on-site.
+ERMS referrals are only required for ADHD assessments. For all other services, GPs should submit referrals directly to individual clinicians.
+
+## Urgent Needs
+
+The Psychology Hub does not provide emergency or crisis services. If you are in need of urgent support, please contact:
+
+- **1737** — Free call or text to talk to a trained counsellor, 24/7
+- **0508 WARMLINE** (0508 927 654) — Peer support line
+- **Canterbury crisis line** — 0800 920 092
+- **Mental Health Foundation** — [mentalhealth.org.nz](https://www.mentalhealth.org.nz)
+- **Emergency Department / Ambulance** — for immediate risk of self-harm

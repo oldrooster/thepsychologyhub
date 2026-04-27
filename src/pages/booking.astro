@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'booking')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Book an appointment at The Psychology Hub, Suite 3, 21 Leslie Hills Drive, Riccarton, Christchurch.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Book an appointment at The Psychology Hub, Suite 3, 21 Leslie Hills Drive, Riccarton, Christchurch.">
   <Content />
 </PageLayout>

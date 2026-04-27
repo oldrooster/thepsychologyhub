@@ -1,23 +1,30 @@
 ---
 title: "Assessments"
+heroImage: "/images/pages/009-assessment.jpg"
 ---
 
-Our clinicians offer a range of psychological assessments to help understand mental health difficulties, neurodevelopmental conditions, and the impact of trauma or injury.
+The Psychology Hub offers comprehensive psychological assessments for adults, including assessments for ADHD and autism spectrum disorder (ASD).
 
-## Types of Assessment
+## Adult ADHD Assessments
 
-### ACC Mental Injury Assessments
+ADHD assessments are comprehensive and time intensive. They involve a clinical interview (3–4 hours), completion of psychometrics (questionnaires), gathering information from a parent/caregiver or partner, and reviewing school reports.
 
-Several of our clinicians are approved ACC providers for Mental Injury Assessments.
+**Fee:** $1,600–$1,800 (GST inclusive)
 
-### Psychological Assessments
+**Requirements:**
+- GP referral required
+- School reports must be provided
+- Contact details for a parent/caregiver or partner who can provide information about your childhood
+- Assessments are not available for individuals with concurrent substance abuse issues
 
-Comprehensive assessments can help diagnose conditions such as anxiety, depression, PTSD, ADHD, and autism.
+## Adult ASD Assessments
 
-### Neurodevelopmental Assessments
+ASD assessments typically take 2–3 hours of face-to-face assessment and require childhood developmental information. A definitive diagnosis requires clear information regarding childhood development from a reliable source.
 
-We offer assessments for Adult ADHD and Adult ASD, providing clarity and a pathway to appropriate support.
+**Fee:** $1,000–$1,600 (GST inclusive)
 
-## Fees
+**Please note:** These assessments do not assess individuals with learning difficulties.
 
-Please contact your chosen clinician directly to discuss assessment fees.
+## ACC Mental Injury Assessments
+
+Several clinicians at The Psychology Hub are approved ACC providers for Mental Injury Assessments. Please contact the relevant clinician directly for more information.

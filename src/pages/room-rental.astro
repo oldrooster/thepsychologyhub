@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'room-rental')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Professional room rental for clinicians at The Psychology Hub, Riccarton, Christchurch.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Professional room rental for clinicians at The Psychology Hub, Riccarton, Christchurch.">
   <Content />
 </PageLayout>

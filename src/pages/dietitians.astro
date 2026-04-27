@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'dietitians')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Registered Dietitian services at The Psychology Hub, specialising in eating disorders and nutrition support.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Registered Dietitian services at The Psychology Hub, specialising in eating disorders and nutrition support.">
   <Content />
 </PageLayout>

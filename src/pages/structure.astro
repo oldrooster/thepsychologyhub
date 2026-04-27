@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'structure')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Learn about the structure of The Psychology Hub group practice in Riccarton, Christchurch.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Learn about the structure of The Psychology Hub group practice in Riccarton, Christchurch.">
   <Content />
 </PageLayout>

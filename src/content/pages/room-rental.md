@@ -1,25 +1,33 @@
 ---
 title: "Room Rental"
+heroImage: "/images/rooms/034.jpg"
 ---
 
-The Psychology Hub offers room rental for clinicians looking for professional consulting space in Riccarton, Christchurch.
+We have room availability for casual rental for registered Health Professionals. We use an online booking system for approved clinicians to book according to their own needs.
 
-## About Our Rooms
+Two of our offices have tables suitable for neuropsychological testing (Kōtare and Kahu).
 
-Our rooms at Suite 3, 21 Leslie Hills Drive, Riccarton are professionally furnished, soundproofed, and welcoming.
+At times, we may have capacity for permanent rental.
 
-## Facilities
+**Enquiries:** roomrental@thepsychologyhub.co.nz
 
-- Dedicated consulting rooms
-- Shared waiting area
-- Kitchen facilities
-- Secure storage
-- High-speed WiFi
+*This email address is exclusively for room rental enquiries. Please allow 3 business days for a response.*
 
-## Rental Options
+## Our Rooms
 
-We offer flexible room rental on a sessional, half-day, or weekly basis.
+We have 12 consulting rooms, each named after a New Zealand bird:
 
-## Enquiries
-
-Contact us at The Psychology Hub, Suite 3, 21 Leslie Hills Drive, Riccarton, Christchurch.
+| Room | Size | Notes |
+|------|------|-------|
+| Kererū | Medium | |
+| Pīwakawaka | Large | |
+| Kōtare | Small | Suitable for neuropsychological testing |
+| Kōkako | Medium | |
+| Korimako | Medium | |
+| Mōhua | Large | |
+| Kiwi | Small | |
+| Takahē | Large | |
+| Tūī | Small | |
+| Kākāriki | Small | |
+| Kākā | Large | |
+| Kahu | Medium | Suitable for neuropsychological testing |

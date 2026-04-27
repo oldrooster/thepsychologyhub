@@ -1,24 +1,24 @@
 ---
 title: "Therapy"
+heroImage: "/images/pages/022.jpg"
 ---
 
-Our clinicians provide evidence-based therapy to individuals across the lifespan.
+Good therapy is a place where you can not only reduce distressing psychological symptoms, but also learn about yourself, improve your relationships with others and build resilience.
 
-## Our Approach
+The clinicians at The Psychology Hub are registered health professionals providing evidence-based treatment. Therapeutic modalities available include CBT, MCT, Schema Therapy, ACT, DBT, Systemic Family Therapy, FBT (Family Based Treatment), Interpersonal Psychotherapy, and EMDR.
 
-We believe therapy works best when tailored to the individual. Our clinicians draw on CBT, EMDR, ACT, DBT, and IPT.
+## ADHD Group Therapy
 
-## What We Treat
+We offer a 6-week group therapy course for late-diagnosed women with ADHD, held on Tuesdays 5:30–7:30pm. Topics covered include late diagnosis, hormones, masking, relationships, and emotional regulation. The programme includes 12 group hours plus online access. For enquiries contact: neuronetworkchristchurch@gmail.com
 
-- Anxiety and panic
-- Depression and low mood
-- Trauma and PTSD
-- Eating difficulties
-- Grief and loss
-- Relationship difficulties
-- Adjustment to illness or injury
-- Work-related stress
+## Eating Disorder Treatment
 
-## Getting Started
+Evidence-based treatments for eating disorders are available, including Family Based Treatment and CBT-based approaches. GP involvement is typically required. Dietitian consultation is recommended where appropriate.
 
-Contact a clinician directly via their profile page to begin.
+## Gender Affirming Care
+
+All clinicians at The Psychology Hub are committed to gender-affirming practice. Some clinicians contract with CDHB to provide funded services including hormone and surgery readiness assessments. A GP referral is required to access funded services.
+
+## EMDR
+
+Eye Movement Desensitisation and Reprocessing (EMDR) is an evidence-based therapy for trauma. EMDR therapy does not require talking in detail about the distressing issue or completing homework between sessions. Several of our clinicians are trained EMDR practitioners and ACC approved providers for Sensitive Claims.

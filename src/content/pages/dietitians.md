@@ -1,18 +1,27 @@
 ---
-title: "Dietitian Services"
+title: "Dietitians"
+heroImage: "/images/pages/010-dietitians.jpg"
 ---
 
-The Psychology Hub is home to registered Dietitians who specialise in eating difficulties and nutrition support.
+Operating out of The Psychology Hub building is Clinical Dietitian, Louise Bennett. She delivers customised nutrition care addressing a wide range of health concerns.
 
 ## Areas of Expertise
 
-- Eating disorders
-- Disordered eating
-- Weight-neutral approaches to health
-- Sports nutrition
-- Chronic disease management
-- Gut health and IBS
+Louise's specialisations encompass:
 
-## Our Approach
+- Eating disorders (including ARFID)
+- Picky eating
+- Digestive wellness and gut health
+- Reproductive health and women's health
+- Weight management
+- Heart health
+- ADHD and nutrition's impact on emotional wellbeing
+- Selective eating patterns
 
-Our Dietitians take a compassionate, non-diet approach to nutrition care, helping clients build a positive and sustainable relationship with food.
+She treats patients across paediatric, teenage, and adult age groups.
+
+## Approach
+
+Louise takes a compassionate, evidence-based approach to nutrition care, helping clients build a positive and sustainable relationship with food. She previously worked at the South Island Eating Disorders Service and Child, Adolescent and Family (CAF) Services.
+
+To make an appointment with Louise, visit her clinician profile or contact her directly.

@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'assessment')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Psychological assessments at The Psychology Hub, including ACC mental injury assessments and neurodevelopmental assessments.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Psychological assessments at The Psychology Hub, including ACC mental injury assessments and neurodevelopmental assessments.">
   <Content />
 </PageLayout>

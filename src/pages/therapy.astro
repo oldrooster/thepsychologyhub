@@ -7,6 +7,6 @@ const page = pages.find(p => p.slug === 'therapy')!;
 const { Content } = await page.render();
 ---
 
-<PageLayout title={page.data.title} description="Evidence-based therapy for individuals of all ages at The Psychology Hub in Riccarton, Christchurch.">
+<PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Evidence-based therapy for individuals of all ages at The Psychology Hub in Riccarton, Christchurch.">
   <Content />
 </PageLayout>
