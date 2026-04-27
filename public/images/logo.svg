@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <rect width="200" height="60" rx="4" fill="#f5f1eb"/>
+  <circle cx="30" cy="30" r="18" fill="#8aab8c" opacity="0.3"/>
+  <circle cx="30" cy="30" r="12" fill="#5a7d5c" opacity="0.5"/>
+  <circle cx="30" cy="30" r="6" fill="#2d6a4f"/>
+  <text x="56" y="22" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#2d6a4f">The Psychology</text>
+  <text x="56" y="40" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#5a7d5c">Hub</text>
+</svg>

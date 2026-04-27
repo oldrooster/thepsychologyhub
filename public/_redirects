@@ -1,0 +1,8 @@
+# Cloudflare Pages redirects
+
+# WordPress legacy URLs
+/portfolio_page/*  /  301
+
+# Admin panel
+/admin  /admin/index.html  200
+/admin/*  /admin/index.html  200

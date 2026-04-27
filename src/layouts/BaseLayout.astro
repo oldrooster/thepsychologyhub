@@ -1,0 +1,329 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'The Psychology Hub',
+  description = 'A group of experienced clinicians in Riccarton, Christchurch, dedicated to your mental health and wellbeing.'
+} = Astro.props;
+
+const pageTitle = title === 'The Psychology Hub' ? title : `${title} | The Psychology Hub`;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{pageTitle}</title>
+  <link rel="icon" type="image/svg+xml" href="/images/logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo-link" aria-label="The Psychology Hub home">
+        <img src="/images/logo.svg" alt="The Psychology Hub" class="logo-img" />
+        <span class="logo-text">The Psychology Hub</span>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="main-nav" class="main-nav" role="navigation" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="/" class="nav-link">Our Team</a></li>
+          <li><a href="/structure" class="nav-link">Structure</a></li>
+          <li><a href="/assessment" class="nav-link">Assessments</a></li>
+          <li><a href="/therapy" class="nav-link">Therapy</a></li>
+          <li><a href="/dietitians" class="nav-link">Dietitians</a></li>
+          <li><a href="/fees" class="nav-link">Fees</a></li>
+          <li><a href="/booking" class="nav-link btn-book">Book Appointment</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <img src="/images/logo.svg" alt="The Psychology Hub" class="footer-logo" />
+        <p class="footer-tagline">Whiria te tāngata — weave the people together</p>
+      </div>
+      <div class="footer-col">
+        <h3>Location</h3>
+        <address>
+          Suite 3, 21 Leslie Hills Drive<br />
+          Riccarton, Christchurch<br />
+          New Zealand
+        </address>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/booking">Book an appointment</a></li>
+          <li><a href="/room-rental">Room rental</a></li>
+          <li><a href="/fees">Fees</a></li>
+          <li><a href="/therapy">Therapy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; {new Date().getFullYear()} The Psychology Hub. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle') as HTMLButtonElement;
+    const nav = document.getElementById('main-nav') as HTMLElement;
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!expanded));
+        nav.classList.toggle('is-open', !expanded);
+      });
+    }
+
+    // Highlight active nav link
+    const currentPath = window.location.pathname;
+    document.querySelectorAll('.nav-link').forEach((link) => {
+      const href = (link as HTMLAnchorElement).getAttribute('href');
+      if (href === currentPath || (href !== '/' && currentPath.startsWith(href!))) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+
+  /* Header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-nav-bg);
+    border-bottom: 1px solid var(--color-border-light);
+    box-shadow: var(--shadow-sm);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .logo-img {
+    height: 40px;
+    width: auto;
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-sage-dark);
+    white-space: nowrap;
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    background: var(--color-sage-bg);
+    color: var(--color-sage-dark);
+  }
+
+  .nav-link.btn-book {
+    background: var(--color-sage);
+    color: white;
+    margin-left: 0.5rem;
+  }
+
+  .nav-link.btn-book:hover {
+    background: var(--color-sage-dark);
+    color: white;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: transform var(--transition), opacity var(--transition);
+  }
+
+  /* Footer */
+  .site-footer {
+    background: var(--color-footer-bg);
+    color: var(--color-footer-text);
+    padding-top: 3rem;
+    margin-top: 4rem;
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .footer-logo {
+    height: 48px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    margin-bottom: 1rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.95rem;
+    color: #b0c8b0;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .footer-col h3 {
+    color: #e0ede0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .footer-col address {
+    font-style: normal;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--color-footer-text);
+  }
+
+  .footer-col ul {
+    list-style: none;
+  }
+
+  .footer-col ul li + li {
+    margin-top: 0.5rem;
+  }
+
+  .footer-col a {
+    font-size: 0.9rem;
+    color: var(--color-footer-text);
+    transition: color var(--transition);
+  }
+
+  .footer-col a:hover {
+    color: #ffffff;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem 0;
+  }
+
+  .footer-bottom p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .logo-text {
+      display: none;
+    }
+
+    .nav-toggle {
+      display: flex;
+    }
+
+    .main-nav {
+      display: none;
+      position: absolute;
+      top: var(--nav-height);
+      left: 0;
+      right: 0;
+      background: white;
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+      padding: 1rem 1.5rem;
+    }
+
+    .main-nav.is-open {
+      display: block;
+    }
+
+    .nav-list {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .nav-link {
+      width: 100%;
+      font-size: 1rem;
+    }
+
+    .nav-link.btn-book {
+      margin-left: 0;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    .footer-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

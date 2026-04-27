@@ -1,0 +1,778 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allClinicians = await getCollection('clinicians');
+const clinicians = allClinicians
+  .sort((a, b) => a.data.display_order - b.data.display_order);
+
+// Collect all unique tags, putting Available first
+const allTags = new Set<string>();
+clinicians.forEach(c => c.data.specialties.forEach(t => allTags.add(t)));
+const tags = ['Available', ...Array.from(allTags).filter(t => t !== 'Available').sort()];
+
+const clinicianData = await Promise.all(
+  clinicians.map(async (c) => {
+    const { Content } = await c.render();
+    return { ...c, Content };
+  })
+);
+---
+
+<BaseLayout title="Our Team" description="Meet our team of experienced psychologists, therapists, and dietitians at The Psychology Hub, Riccarton, Christchurch.">
+  <div class="hero-section">
+    <div class="container">
+      <h1>Our Team</h1>
+      <p class="hero-lead">Meet our team of experienced clinicians in Riccarton, Christchurch. Use the filters below to find the right clinician for your needs.</p>
+    </div>
+  </div>
+
+  <div class="filter-section" id="filter-section">
+    <div class="container">
+      <div class="filter-bar" role="group" aria-label="Filter clinicians by specialty">
+        <button class="filter-btn clear-btn" id="clear-filters" aria-label="Clear all filters" hidden>
+          Clear all
+        </button>
+        {tags.map(tag => (
+          <button
+            class={`filter-btn tag-btn${tag === 'Available' ? ' tag-btn--available' : ''}`}
+            data-tag={tag}
+            aria-pressed="false"
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="clinicians-section">
+    <div class="container">
+      <div id="no-results" class="no-results" hidden>
+        <p>No clinicians match the selected filters. Try removing some filters.</p>
+        <button class="btn-secondary" id="no-results-clear">Clear filters</button>
+      </div>
+      <div class="clinician-grid" id="clinician-grid">
+        {clinicianData.map((clinician) => (
+          <article
+            class="clinician-card"
+            data-specialties={JSON.stringify(clinician.data.specialties)}
+            data-slug={clinician.slug}
+            role="button"
+            tabindex="0"
+            aria-label={`View profile for ${clinician.data.name}`}
+          >
+            <div class="card-photo-wrap">
+              {clinician.data.photo ? (
+                <img
+                  src={clinician.data.photo}
+                  alt={`Photo of ${clinician.data.name}`}
+                  class="card-photo"
+                  loading="lazy"
+                  width="280"
+                  height="280"
+                />
+              ) : (
+                <div class="card-photo-placeholder" aria-hidden="true">
+                  <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="22" r="11" fill="currentColor" opacity="0.3"/>
+                    <path d="M8 52c0-12.15 9.85-22 22-22s22 9.85 22 22" fill="currentColor" opacity="0.2"/>
+                  </svg>
+                </div>
+              )}
+              {clinician.data.availability && (
+                <span class="available-badge" aria-label="Accepting referrals">Available</span>
+              )}
+            </div>
+            <div class="card-body">
+              <h2 class="card-name">{clinician.data.name}</h2>
+              <p class="card-role">{clinician.data.role}</p>
+              <div class="card-tags" aria-label="Specialties">
+                {clinician.data.specialties.slice(0, 5).map(tag => (
+                  <span class={`tag${tag === 'Available' ? ' tag--available' : ''}`}>{tag}</span>
+                ))}
+                {clinician.data.specialties.length > 5 && (
+                  <span class="tag tag--more">+{clinician.data.specialties.length - 5}</span>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Clinician Modal -->
+  <div id="clinician-modal" class="modal" role="dialog" aria-modal="true" aria-label="Clinician profile" hidden>
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-container">
+      <button class="modal-close" id="modal-close" aria-label="Close profile">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <div class="modal-scroll">
+        <div class="modal-photo-wrap">
+          <img id="modal-photo" src="" alt="" class="modal-photo" width="200" height="200" />
+          <div id="modal-photo-placeholder" class="modal-photo-placeholder" hidden aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="28" r="16" fill="currentColor" opacity="0.25"/>
+              <path d="M8 72c0-17.67 14.33-32 32-32s32 14.33 32 32" fill="currentColor" opacity="0.15"/>
+            </svg>
+          </div>
+          <span id="modal-available-badge" class="available-badge available-badge--large" hidden>Available</span>
+        </div>
+        <div class="modal-content">
+          <h2 id="modal-name" class="modal-name"></h2>
+          <p id="modal-role" class="modal-role"></p>
+          <p id="modal-quals" class="modal-quals"></p>
+          <div id="modal-tags" class="modal-tags"></div>
+          <div id="modal-bio" class="modal-bio prose"></div>
+          <div id="modal-contact" class="modal-contact" hidden>
+            <h3>Contact</h3>
+            <p id="modal-email"></p>
+            <p id="modal-notes" hidden></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<!-- Embed clinician data for JS access -->
+<script define:vars={{ clinicianDataJson: JSON.stringify(clinicianData.map(c => ({
+  slug: c.slug,
+  name: c.data.name,
+  role: c.data.role,
+  qualifications: c.data.qualifications,
+  photo: c.data.photo,
+  availability: c.data.availability,
+  specialties: c.data.specialties,
+  contact_email: c.data.contact_email,
+  contact_notes: c.data.contact_notes || '',
+}))) }}>
+  window.__CLINICIANS__ = JSON.parse(clinicianDataJson);
+</script>
+
+<script>
+  // ---- Multi-select Tag Filter ----
+  const tagBtns = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.clinician-card');
+  const clearBtn = document.getElementById('clear-filters') as HTMLButtonElement;
+  const noResults = document.getElementById('no-results') as HTMLElement;
+  const noResultsClear = document.getElementById('no-results-clear') as HTMLButtonElement;
+  let activeTags = new Set<string>();
+
+  function updateFilters() {
+    clearBtn.hidden = activeTags.size === 0;
+    let visible = 0;
+    cards.forEach(card => {
+      const specialties: string[] = JSON.parse(card.dataset.specialties || '[]');
+      const matches = activeTags.size === 0 || [...activeTags].every(t => specialties.includes(t));
+      card.style.display = matches ? '' : 'none';
+      if (matches) visible++;
+    });
+    noResults.hidden = visible > 0;
+  }
+
+  tagBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag!;
+      if (activeTags.has(tag)) {
+        activeTags.delete(tag);
+        btn.setAttribute('aria-pressed', 'false');
+      } else {
+        activeTags.add(tag);
+        btn.setAttribute('aria-pressed', 'true');
+      }
+      updateFilters();
+    });
+  });
+
+  function clearFilters() {
+    activeTags.clear();
+    tagBtns.forEach(btn => btn.setAttribute('aria-pressed', 'false'));
+    updateFilters();
+  }
+
+  clearBtn.addEventListener('click', clearFilters);
+  noResultsClear?.addEventListener('click', clearFilters);
+
+  // ---- Modal ----
+  const modal = document.getElementById('clinician-modal') as HTMLElement;
+  const backdrop = document.getElementById('modal-backdrop') as HTMLElement;
+  const closeBtn = document.getElementById('modal-close') as HTMLButtonElement;
+
+  const modalPhoto = document.getElementById('modal-photo') as HTMLImageElement;
+  const modalPhotoPlaceholder = document.getElementById('modal-photo-placeholder') as HTMLElement;
+  const modalAvailBadge = document.getElementById('modal-available-badge') as HTMLElement;
+  const modalName = document.getElementById('modal-name') as HTMLElement;
+  const modalRole = document.getElementById('modal-role') as HTMLElement;
+  const modalQuals = document.getElementById('modal-quals') as HTMLElement;
+  const modalTags = document.getElementById('modal-tags') as HTMLElement;
+  const modalBio = document.getElementById('modal-bio') as HTMLElement;
+  const modalContact = document.getElementById('modal-contact') as HTMLElement;
+  const modalEmail = document.getElementById('modal-email') as HTMLElement;
+  const modalNotes = document.getElementById('modal-notes') as HTMLElement;
+
+  // We need to get bio HTML from the rendered content
+  // We'll fetch it from the pre-rendered hidden content divs
+  const bioStore: Record<string, string> = {};
+
+  // Populate bio store from hidden data divs
+  document.querySelectorAll<HTMLElement>('[data-bio]').forEach(el => {
+    bioStore[el.dataset.slug!] = el.innerHTML;
+  });
+
+  let lastFocused: HTMLElement | null = null;
+
+  function openModal(slug: string) {
+    const clinicians: any[] = (window as any).__CLINICIANS__ || [];
+    const c = clinicians.find(x => x.slug === slug);
+    if (!c) return;
+
+    lastFocused = document.activeElement as HTMLElement;
+
+    if (c.photo) {
+      modalPhoto.src = c.photo;
+      modalPhoto.alt = `Photo of ${c.name}`;
+      modalPhoto.hidden = false;
+      modalPhotoPlaceholder.hidden = true;
+    } else {
+      modalPhoto.hidden = true;
+      modalPhotoPlaceholder.hidden = false;
+    }
+
+    modalAvailBadge.hidden = !c.availability;
+    modalName.textContent = c.name;
+    modalRole.textContent = c.role;
+    modalQuals.textContent = c.qualifications;
+
+    // Tags
+    modalTags.innerHTML = c.specialties
+      .map((t: string) => `<span class="tag${t === 'Available' ? ' tag--available' : ''}">${t}</span>`)
+      .join('');
+
+    // Bio — use stored HTML or fetch from hidden element
+    const bioEl = document.querySelector<HTMLElement>(`[data-bio][data-slug="${slug}"]`);
+    if (bioEl) {
+      modalBio.innerHTML = bioEl.innerHTML;
+    } else {
+      modalBio.textContent = '';
+    }
+
+    // Contact
+    if (c.contact_email) {
+      modalContact.hidden = false;
+      modalEmail.innerHTML = `<a href="mailto:${c.contact_email}">${c.contact_email}</a>`;
+      if (c.contact_notes) {
+        modalNotes.hidden = false;
+        modalNotes.textContent = c.contact_notes;
+      } else {
+        modalNotes.hidden = true;
+      }
+    } else {
+      modalContact.hidden = true;
+    }
+
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      modal.classList.add('is-open');
+      closeBtn.focus();
+    }, 10);
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    setTimeout(() => {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      lastFocused?.focus();
+    }, 250);
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.slug!));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(card.dataset.slug!);
+      }
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) closeModal();
+  });
+
+  // Trap focus inside modal
+  modal.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusable = modal.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  // Mobile: touch drag-to-dismiss
+  let touchStartY = 0;
+  const modalContainer = document.querySelector<HTMLElement>('.modal-container');
+  if (modalContainer) {
+    modalContainer.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    modalContainer.addEventListener('touchmove', (e) => {
+      const deltaY = e.touches[0].clientY - touchStartY;
+      if (deltaY > 0) {
+        modalContainer.style.transform = `translateY(${deltaY}px)`;
+      }
+    }, { passive: true });
+
+    modalContainer.addEventListener('touchend', (e) => {
+      const deltaY = e.changedTouches[0].clientY - touchStartY;
+      modalContainer.style.transform = '';
+      if (deltaY > 80) closeModal();
+    });
+  }
+</script>
+
+<!-- Hidden bio content divs for modal population -->
+{clinicianData.map(async (clinician) => {
+  const { Content } = clinician;
+  return (
+    <div data-bio data-slug={clinician.slug} hidden>
+      <Content />
+    </div>
+  );
+})}
+
+<style>
+  .hero-section {
+    background: var(--color-warm-white);
+    padding: 3rem 0 2.5rem;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .hero-section h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-sage-dark);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-lead {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 65ch;
+    line-height: 1.65;
+  }
+
+  /* Filter Bar */
+  .filter-section {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 50;
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.875rem 0;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--color-border);
+    background: white;
+    color: var(--color-text-muted);
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-sage);
+    color: var(--color-sage-dark);
+    background: var(--color-sage-bg);
+  }
+
+  .filter-btn[aria-pressed="true"] {
+    background: var(--color-sage);
+    border-color: var(--color-sage);
+    color: white;
+  }
+
+  .tag-btn--available {
+    border-color: var(--color-sage-light);
+    color: var(--color-green-available);
+    background: var(--color-green-available-bg);
+  }
+
+  .tag-btn--available[aria-pressed="true"] {
+    background: var(--color-green-available);
+    border-color: var(--color-green-available);
+    color: white;
+  }
+
+  .clear-btn {
+    border-color: #e5c5c5;
+    color: #b04040;
+    background: #fff5f5;
+  }
+
+  .clear-btn:hover {
+    background: #ffe0e0;
+    border-color: #c06060;
+    color: #8a2020;
+  }
+
+  /* Clinician Grid */
+  .clinicians-section {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .clinician-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .clinician-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+    box-shadow: var(--shadow-sm);
+    outline: none;
+  }
+
+  .clinician-card:hover, .clinician-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-sage-light);
+  }
+
+  .card-photo-wrap {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--color-warm-white);
+    overflow: hidden;
+  }
+
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .card-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-sage);
+  }
+
+  .card-photo-placeholder svg {
+    width: 50%;
+    height: 50%;
+  }
+
+  .available-badge {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: var(--color-green-available);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+  }
+
+  .card-body {
+    padding: 1rem 1.1rem 1.2rem;
+  }
+
+  .card-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    color: var(--color-text);
+    line-height: 1.35;
+  }
+
+  .card-role {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .tag--more {
+    background: var(--color-border-light);
+    color: var(--color-text-muted);
+  }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-text-muted);
+  }
+
+  .no-results p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .btn-secondary {
+    padding: 0.5rem 1.5rem;
+    background: white;
+    border: 1.5px solid var(--color-sage);
+    color: var(--color-sage-dark);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background var(--transition);
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-sage-bg);
+  }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  @media (min-width: 640px) {
+    .modal {
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .modal.is-open .modal-backdrop {
+    opacity: 1;
+  }
+
+  .modal-container {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    width: 100%;
+    max-height: 92dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 250ms cubic-bezier(0.32, 0.72, 0, 1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  @media (min-width: 640px) {
+    .modal-container {
+      border-radius: var(--radius-lg);
+      width: min(680px, 100%);
+      max-height: 88dvh;
+      transform: scale(0.95) translateY(8px);
+      transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 250ms ease;
+      opacity: 0;
+    }
+
+    .modal.is-open .modal-container {
+      opacity: 1;
+    }
+  }
+
+  .modal.is-open .modal-container {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    color: var(--color-text-muted);
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .modal-close:hover {
+    background: #f5f5f5;
+    color: var(--color-text);
+  }
+
+  .modal-scroll {
+    overflow-y: auto;
+    flex: 1;
+    overscroll-behavior: contain;
+  }
+
+  .modal-photo-wrap {
+    position: relative;
+    background: var(--color-warm-white);
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .modal-photo-wrap {
+      aspect-ratio: 2/1;
+    }
+  }
+
+  .modal-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .modal-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-sage);
+  }
+
+  .modal-photo-placeholder svg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .available-badge--large {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.75rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem 1.75rem 2rem;
+  }
+
+  .modal-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.3rem;
+  }
+
+  .modal-role {
+    font-size: 1rem;
+    color: var(--color-sage-dark);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .modal-quals {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-bio {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+    border-top: 1px solid var(--color-border-light);
+    padding-top: 1.25rem;
+  }
+
+  .modal-bio p {
+    margin-bottom: 0.875rem;
+  }
+
+  .modal-contact {
+    border-top: 1px solid var(--color-border-light);
+    padding-top: 1.25rem;
+  }
+
+  .modal-contact h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .modal-contact a {
+    color: var(--color-sage-dark);
+    font-weight: 500;
+  }
+
+  .modal-contact a:hover {
+    text-decoration: underline;
+  }
+</style>
