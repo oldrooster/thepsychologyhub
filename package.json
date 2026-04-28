@@ -10,11 +10,11 @@
     "scrape": "node scrape.mjs"
   },
   "dependencies": {
-    "astro": "^4.16.0",
-    "@astrojs/mdx": "^3.1.8"
+    "@astrojs/mdx": "^5.0.4",
+    "astro": "^6.1.9"
   },
   "devDependencies": {
-    "node-fetch": "^3.3.2",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
+    "node-fetch": "^3.3.2"
   }
 }

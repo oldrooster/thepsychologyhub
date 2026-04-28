@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const clinicians = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/clinicians' }),
   schema: z.object({
     name: z.string(),
     role: z.string(),
@@ -16,7 +17,7 @@ const clinicians = defineCollection({
 });
 
 const pages = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
     heroImage: z.string().optional(),
