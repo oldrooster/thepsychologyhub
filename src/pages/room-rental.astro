@@ -1,10 +1,10 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
 
 const pages = await getCollection('pages');
-const page = pages.find(p => p.slug === 'room-rental')!;
-const { Content } = await page.render();
+const page = pages.find(p => p.id === 'room-rental')!;
+const { Content } = await render(page);
 ---
 
 <PageLayout title={page.data.title} heroImage={page.data.heroImage} description="Professional room rental for clinicians at The Psychology Hub, Riccarton, Christchurch.">

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allClinicians = await getCollection('clinicians');
@@ -13,7 +13,7 @@ const tags = ['Available', ...Array.from(allTags).filter(t => t !== 'Available')
 
 const clinicianData = await Promise.all(
   clinicians.map(async (c) => {
-    const { Content } = await c.render();
+    const { Content } = await render(c);
     return { ...c, Content };
   })
 );
@@ -21,7 +21,8 @@ const clinicianData = await Promise.all(
 
 <BaseLayout title="Our Team" description="Meet our team of experienced psychologists, therapists, and dietitians at The Psychology Hub, Riccarton, Christchurch.">
   <div class="hero-section">
-    <div class="container">
+    <img src="/images/pages/home-hero.png" alt="" class="hero-img" aria-hidden="true" />
+    <div class="container hero-text">
       <h1>Our Team</h1>
       <p class="hero-lead">Meet our team of experienced clinicians in Riccarton, Christchurch. Use the filters below to find the right clinician for your needs.</p>
     </div>
@@ -30,9 +31,6 @@ const clinicianData = await Promise.all(
   <div class="filter-section" id="filter-section">
     <div class="container">
       <div class="filter-bar" role="group" aria-label="Filter clinicians by specialty">
-        <button class="filter-btn clear-btn" id="clear-filters" aria-label="Clear all filters" hidden>
-          Clear all
-        </button>
         {tags.map(tag => (
           <button
             class={`filter-btn tag-btn${tag === 'Available' ? ' tag-btn--available' : ''}`}
@@ -42,6 +40,9 @@ const clinicianData = await Promise.all(
             {tag}
           </button>
         ))}
+        <button class="filter-btn clear-btn" id="clear-filters" aria-label="Clear all filters" hidden>
+          Clear all
+        </button>
       </div>
     </div>
   </div>
@@ -57,7 +58,7 @@ const clinicianData = await Promise.all(
           <article
             class="clinician-card"
             data-specialties={JSON.stringify(clinician.data.specialties)}
-            data-slug={clinician.slug}
+            data-slug={clinician.id}
             role="button"
             tabindex="0"
             aria-label={`View profile for ${clinician.data.name}`}
@@ -140,7 +141,7 @@ const clinicianData = await Promise.all(
 
 <!-- Embed clinician data for JS access -->
 <script define:vars={{ clinicianDataJson: JSON.stringify(clinicianData.map(c => ({
-  slug: c.slug,
+  slug: c.id,
   name: c.data.name,
   role: c.data.role,
   qualifications: c.data.qualifications,
@@ -351,7 +352,7 @@ const clinicianData = await Promise.all(
 {clinicianData.map(async (clinician) => {
   const { Content } = clinician;
   return (
-    <div data-bio data-slug={clinician.slug} hidden>
+    <div data-bio data-slug={clinician.id} hidden>
       <Content />
     </div>
   );
@@ -359,21 +360,39 @@ const clinicianData = await Promise.all(
 
 <style>
   .hero-section {
-    background: var(--color-warm-white);
-    padding: 3rem 0 2.5rem;
+    position: relative;
     border-bottom: 1px solid var(--color-border-light);
+    overflow: hidden;
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+
+  .hero-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 2rem;
+    background: linear-gradient(to bottom, transparent 30%, rgba(16,24,32,0.55) 100%);
   }
 
   .hero-section h1 {
     font-size: 2.25rem;
     font-weight: 700;
-    color: var(--color-sage-dark);
+    color: #ffffff;
     margin-bottom: 0.75rem;
   }
 
   .hero-lead {
     font-size: 1.05rem;
-    color: var(--color-text-muted);
+    color: rgba(255,255,255,0.9);
     max-width: 65ch;
     line-height: 1.65;
   }
@@ -672,22 +691,23 @@ const clinicianData = await Promise.all(
   .modal-photo-wrap {
     position: relative;
     background: var(--color-warm-white);
-    aspect-ratio: 4/5;
+    width: 100%;
     max-height: 62dvh;
     overflow: hidden;
   }
 
   @media (min-width: 640px) {
     .modal-photo-wrap {
-      aspect-ratio: 3/4;
       max-height: 56dvh;
     }
   }
 
   .modal-photo {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    height: auto;
+    max-height: 62dvh;
+    display: block;
+    object-fit: cover;
     object-position: center top;
   }
 
